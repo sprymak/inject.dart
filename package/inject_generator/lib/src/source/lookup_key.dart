@@ -22,10 +22,11 @@ class LookupKey {
   /// See also [LookupKey.toJson].
   factory LookupKey.fromJson(Map<String, dynamic> json) {
     return new LookupKey(
-        new SymbolPath.fromAbsoluteUri(Uri.parse(json['root'])),
+        new SymbolPath.fromAbsoluteUri(Uri.parse(json['root'] as String)),
         qualifier: json['qualifier'] == null
             ? null
-            : new SymbolPath.fromAbsoluteUri(Uri.parse(json['qualifier'])));
+            : new SymbolPath.fromAbsoluteUri(
+                Uri.parse(json['qualifier'] as String)));
   }
 
   /// A human-readable representation of the dart Symbol of this type.

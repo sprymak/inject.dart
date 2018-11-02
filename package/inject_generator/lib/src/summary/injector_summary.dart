@@ -39,8 +39,10 @@ class InjectorSummary {
     return {
       "name": clazz.symbol,
       "providers": providers,
-      "modules":
-          modules.map((summary) => summary.toAbsoluteUri().toString()).toList()
+      "modules": modules
+          .map((summary) => summary.toAbsoluteUri().toString())
+          .cast<String>()
+          .toList()
     };
   }
 }

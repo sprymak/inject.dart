@@ -19,7 +19,8 @@ class InjectedType {
   /// See also [InjectedType.toJson].
   factory InjectedType.fromJson(Map<String, dynamic> json) {
     return new InjectedType(
-      new LookupKey.fromJson(json['lookupKey']),
+      new LookupKey.fromJson(
+          (json['lookupKey'] as Map).cast<String, dynamic>()),
       isProvider: json['isProvider'],
     );
   }

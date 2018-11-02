@@ -93,7 +93,7 @@ class InjectorGraph {
   final List<InjectorProvider> providers;
 
   /// Dependencies resolved to concrete providers mapped from key.
-  final Map<SymbolPath, ResolvedDependency> mergedDependencies;
+  final Map<LookupKey, ResolvedDependency> mergedDependencies;
 
   InjectorGraph._(this.includeModules, this.providers, this.mergedDependencies);
 }

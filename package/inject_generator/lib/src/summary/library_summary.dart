@@ -10,16 +10,21 @@ class LibrarySummary {
     if (json == null) {
       throw new ArgumentError.notNull('json');
     }
+
     var assetUri = Uri.parse(json['asset'] as String);
-    Map<String, dynamic> summary = json['summary'] as Map<String, dynamic>;
-    List<InjectorSummary> injectors = (summary['injector'] as List<dynamic>)
-        .map((e) => _injectorFromJson(assetUri, e as Map<String, dynamic>))
+    Map<String, dynamic> summary =
+        (json['summary'] as Map).cast<String, dynamic>();
+    List<InjectorSummary> injectors = (summary['injector'] as List)
+        .cast<Map<String, dynamic>>()
+        .map((e) => _injectorFromJson(assetUri, e))
         .toList();
-    var modules = (summary['module'] as List<dynamic>)
-        .map((e) => _moduleFromJson(assetUri, e as Map<String, dynamic>))
+    List<ModuleSummary> modules = (summary['module'] as List)
+        .cast<Map<String, dynamic>>()
+        .map((e) => _moduleFromJson(assetUri, e))
         .toList();
-    var injectables = (summary['injectable'] as List<dynamic>)
-        .map((e) => _injectableFromJson(assetUri, e as Map<String, dynamic>))
+    List<InjectableSummary> injectables = (summary['injectable'] as List)
+        .cast<Map<String, dynamic>>()
+        .map((e) => _injectableFromJson(assetUri, e))
         .toList();
     return new LibrarySummary(assetUri,
         injectors: injectors, modules: modules, injectables: injectables);
@@ -80,35 +85,37 @@ class LibrarySummary {
 
 InjectorSummary _injectorFromJson(Uri assetUri, Map<String, dynamic> json) {
   String name = json['name'] as String;
-  List<SymbolPath> modules = (json['modules'] as List<String>)
+  List<SymbolPath> modules = (json['modules'] as List)
+      .cast<String>()
       .map(Uri.parse)
       .map((e) => new SymbolPath.fromAbsoluteUri(e))
       .toList();
-  List<ProviderSummary> providers =
-      (json['providers'] as List<Map<String, dynamic>>)
-          .map(_providerFromJson)
-          .toList();
+  List<ProviderSummary> providers = (json['providers'] as List)
+      .cast<Map<String, dynamic>>()
+      .map(_providerFromJson)
+      .toList();
   var clazz = new SymbolPath.fromAbsoluteUri(assetUri, name);
   return new InjectorSummary(clazz, modules, providers);
 }
 
 ModuleSummary _moduleFromJson(Uri assetUri, Map<String, dynamic> json) {
   String name = json['name'] as String;
-  List<ProviderSummary> providers =
-      (json['providers'] as List<Map<String, dynamic>>)
-          .map(_providerFromJson)
-          .toList();
+  List<Map<String, dynamic>> jsonList =
+      (json['providers'] as List).cast<Map<String, dynamic>>();
+  List<ProviderSummary> providers = jsonList.map(_providerFromJson).toList();
   var clazz = new SymbolPath.fromAbsoluteUri(assetUri, name);
   return new ModuleSummary(clazz, providers);
 }
 
 ProviderSummary _providerFromJson(Map<String, dynamic> json) {
   String name = json['name'] as String;
-  var injectedType = new InjectedType.fromJson(json['injectedType']);
+  var injectedTypeMap = (json['injectedType'] as Map).cast<String, dynamic>();
+  var injectedType = new InjectedType.fromJson(injectedTypeMap);
   var singleton = json['singleton'] as bool;
   var asynchronous = json['asynchronous'] as bool;
   var kind = json['kind'] as String;
-  final dependencies = (json['dependencies'] as List<Map<String, dynamic>>)
+  final List<InjectedType> dependencies = (json['dependencies'] as List)
+      .cast<Map<String, dynamic>>()
       .map((dependency) => new InjectedType.fromJson(dependency))
       .toList();
   return new ProviderSummary(

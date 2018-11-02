@@ -154,12 +154,10 @@ not listed in the "generate_for" attribute of the "dart_library" build target.
     }
 
     _detectAndWarnAboutCycles(mergedDependencies);
-
     return new InjectorGraph._(
-      new List<SymbolPath>.unmodifiable(allModules.map((m) => m.clazz)),
-      new List<InjectorProvider>.unmodifiable(injectorProviders),
-      new Map<SymbolPath, ResolvedDependency>.unmodifiable(mergedDependencies),
-    );
+        new List<SymbolPath>.unmodifiable(allModules.map((m) => m.clazz)),
+        new List<InjectorProvider>.unmodifiable(injectorProviders),
+        Map<LookupKey, ResolvedDependency>.unmodifiable(mergedDependencies));
   }
 
   void _detectAndWarnAboutCycles(
